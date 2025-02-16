@@ -1,4 +1,3 @@
-// src/app/components/Auth/GoogleSignIn.js
 'use client';
 
 import { auth, googleProvider, signInWithPopup } from '../../firebase/firebase';
@@ -10,7 +9,12 @@ const GoogleSignIn = () => {
       const user = result.user;
       console.log('Google Sign-In Success:', user);
     } catch (error) {
-      console.error('Google Sign-In Error:', error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        console.warn('Sign-in popup was closed before authentication.');
+        alert('Popup closed before signing in. Please try again.');
+      } else {
+        console.error('Google Sign-In Error:', error);
+      }
     }
   };
 

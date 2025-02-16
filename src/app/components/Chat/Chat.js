@@ -1,4 +1,3 @@
-// src/app/components/Chat/Chat.js
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -18,17 +17,35 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const messagesEndRef = useRef(null);
+  const user = auth.currentUser;
 
-  // Load chat history from Firestore when the component mounts
+  // Responsive sidebar handling
   useEffect(() => {
-    const loadConversations = async () => {
-      const storedChats = await loadConversationsFromFirestore();
-      setConversations(storedChats);
+    const checkScreenSize = () => {
+      if (window.innerWidth >= 768) {
+        setShowHistory(true);
+      } else {
+        setShowHistory(false);
+      }
     };
-    loadConversations();
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Scroll to the bottom of the chat
+  // Load conversations
+  useEffect(() => {
+    const loadConversations = async () => {
+      if (user) {
+        const storedChats = await loadConversationsFromFirestore(user.uid);
+        setConversations(storedChats);
+      }
+    };
+    loadConversations();
+  }, [user]);
+
+  // Scroll handling
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -37,7 +54,7 @@ export default function Chat() {
     scrollToBottom();
   }, [currentChat]);
 
-  // Send message to the bot
+  // Message handling
   const sendMessage = async () => {
     if (!message.trim()) return;
     setLoading(true);
@@ -62,7 +79,7 @@ export default function Chat() {
     }
   };
 
-  // Save the current conversation to Firestore
+  // Conversation handling
   const saveConversation = async () => {
     if (currentChat.length === 0) {
       alert('No messages to save!');
@@ -70,12 +87,13 @@ export default function Chat() {
     }
     const summary = summarizeConversation(currentChat);
     const conversation = { chat: currentChat, summary };
-    await saveConversationToFirestore(conversation);
-    setConversations([...conversations, conversation]);
-    setCurrentChat([]);
+    if (user) {
+      await saveConversationToFirestore(conversation, user.uid);
+      setConversations([...conversations, conversation]);
+      setCurrentChat([]);
+    }
   };
 
-  // Delete a conversation
   const deleteConversation = (index) => {
     if (window.confirm('Are you sure you want to delete this conversation?')) {
       const updatedConversations = conversations.filter((_, i) => i !== index);
@@ -85,7 +103,7 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900 relative">
-      {/* History Sidebar Toggle Button */}
+      {/* Hamburger Menu - Always visible when sidebar is closed */}
       {!showHistory && (
         <button 
           className="fixed top-4 left-4 p-2 bg-blue-500 rounded-full text-white hover:bg-blue-600 transition shadow-lg z-50"
@@ -99,15 +117,19 @@ export default function Chat() {
       {showHistory && (
         <HistorySidebar
           conversations={conversations}
-          onSelect={(chat) => setCurrentChat(chat.chat)}
+          onSelect={(chat) => {
+            setCurrentChat(chat.chat);
+            if (window.innerWidth < 768) {
+              setShowHistory(false);
+            }
+          }}
           onDelete={deleteConversation}
           onClose={() => setShowHistory(false)}
         />
       )}
 
       {/* Main Chat Area */}
-      <div className="flex flex-col flex-1">
-        {/* Chat Header */}
+      <div className="flex flex-col flex-1 w-full">
         <ChatHeader />
 
         {/* Chat Messages */}
@@ -126,7 +148,7 @@ export default function Chat() {
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-gray-200 p-3 rounded-xl w-[80%]">
+              <div className="bg-gray-200 p-3 rounded-xl max-w-[80%]">
                 <p>Thinking...</p>
               </div>
             </div>

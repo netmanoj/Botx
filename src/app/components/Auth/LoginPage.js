@@ -1,31 +1,81 @@
-// src/app/components/Auth/LoginPage.js
 'use client';
 
 import { useState } from 'react';
-import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from '../../firebase/firebase';
+import {
+  auth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from '../../firebase/firebase';
 import GoogleSignIn from './GoogleSignIn';
-import PhoneSign from './PhoneSign';
-import { Mail, Lock, User } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
+  // Handle email/password authentication
   const handleEmailAuth = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccessMessage('');
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (!isLogin && password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
     try {
       if (isLogin) {
-        // Sign in with email and password
         await signInWithEmailAndPassword(auth, email, password);
         console.log('User signed in successfully');
       } else {
-        // Create a new user with email and password
         await createUserWithEmailAndPassword(auth, email, password);
         console.log('User created successfully');
       }
     } catch (error) {
-      console.error('Email Auth Error:', error.message);
+      console.error('Email Auth Error:', error.code);
+      switch (error.code) {
+        case 'auth/invalid-credential':
+          setError('Invalid email or password. Please try again.');
+          break;
+        case 'auth/user-not-found':
+          setError('No user found with this email address.');
+          break;
+        case 'auth/wrong-password':
+          setError('Incorrect password. Please try again.');
+          break;
+        case 'auth/email-already-in-use':
+          setError('This email is already in use. Please sign in instead.');
+          break;
+        default:
+          setError('An error occurred. Please try again.');
+      }
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    setError('');
+    setSuccessMessage('');
+    if (!email) {
+      setError('Please enter your email address first.');
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setSuccessMessage('Password reset email sent. Check your inbox.');
+    } catch (error) {
+      console.error('Password Reset Error:', error.message);
+      setError(error.message);
     }
   };
 
@@ -35,8 +85,11 @@ export default function LoginPage() {
         <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           {isLogin ? 'Welcome Back!' : 'Create an Account'}
         </h2>
+
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        {successMessage && <p className="text-green-500 text-sm mb-4">✅ {successMessage}</p>}
+
         <form className="space-y-6" onSubmit={handleEmailAuth}>
-          {/* Email Input */}
           <div className="relative">
             <input
               id="email"
@@ -52,13 +105,12 @@ export default function LoginPage() {
             <Mail className="absolute left-3 top-2.5 text-gray-400" size={20} />
           </div>
 
-          {/* Password Input */}
           <div className="relative">
             <input
               id="password"
               name="password"
               type="password"
-              autoComplete="current-password"
+              autoComplete={isLogin ? "current-password" : "new-password"}
               required
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent placeholder-gray-400"
               placeholder="Password"
@@ -68,7 +120,6 @@ export default function LoginPage() {
             <Lock className="absolute left-3 top-2.5 text-gray-400" size={20} />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:ring-offset-2 transition-all"
@@ -77,40 +128,25 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Toggle Between Sign In and Sign Up */}
         <div className="mt-4 text-center">
-          <button
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-sm text-blue-600 hover:text-blue-500"
-          >
+          <button onClick={() => setIsLogin(!isLogin)} className="text-sm text-blue-600 hover:text-blue-500">
             {isLogin ? 'Create a new account' : 'Already have an account? Sign in'}
           </button>
         </div>
 
-        {/* Divider */}
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
-            </div>
-          </div>
+        <div className="mt-6 relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-gray-500">Or continue with</span>
         </div>
 
-        {/* Social Auth Buttons */}
         <div className="mt-6 space-y-4">
           <GoogleSignIn />
-          <PhoneSign />
         </div>
 
-        {/* Forgot Password Link */}
         {isLogin && (
           <div className="mt-4 text-center">
-            <a href="#" className="text-sm text-blue-600 hover:text-blue-500">
+            <button onClick={handleForgotPassword} className="text-sm text-blue-600 hover:text-blue-500">
               Forgot your password?
-            </a>
+            </button>
           </div>
         )}
       </div>
