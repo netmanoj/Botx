@@ -22,7 +22,7 @@ export default function Chat() {
   // Responsive sidebar handling
   useEffect(() => {
     const checkScreenSize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 1280) {
         setShowHistory(true);
       } else {
         setShowHistory(false);
@@ -102,29 +102,42 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 text-gray-900 relative">
-      {/* Hamburger Menu - Always visible when sidebar is closed */}
+    <div className="flex h-screen overflow-hidden bg-violet-50">
+      {/* Mobile Menu Button */}
       {!showHistory && (
         <button 
-          className="fixed top-4 left-4 p-2 bg-blue-500 rounded-full text-white hover:bg-blue-600 transition shadow-lg z-50"
+          className="fixed top-4 left-4 neu-button p-2 bg-violet-400 z-50 xl:hidden hover:bg-violet-300"
           onClick={() => setShowHistory(true)}
+          title="Show chat history"
         >
-          <Menu size={20} />
+          <Menu size={24} className="text-black" />
         </button>
       )}
 
-      {/* History Sidebar */}
-      {showHistory && (
+      {/* History Sidebar - Fixed position on mobile, static on desktop */}
+      <div className={`
+        fixed inset-y-0 left-0 w-[320px] transform transition-transform duration-300 ease-in-out z-40
+        ${showHistory ? 'translate-x-0' : '-translate-x-full'}
+        xl:relative xl:translate-x-0 xl:transition-none
+      `}>
         <HistorySidebar
           conversations={conversations}
           onSelect={(chat) => {
             setCurrentChat(chat.chat);
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 1280) {
               setShowHistory(false);
             }
           }}
           onDelete={deleteConversation}
           onClose={() => setShowHistory(false)}
+        />
+      </div>
+
+      {/* Overlay for mobile sidebar */}
+      {showHistory && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 xl:hidden"
+          onClick={() => setShowHistory(false)}
         />
       )}
 
@@ -133,37 +146,41 @@ export default function Chat() {
         <ChatHeader />
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {currentChat.map((msg, index) => (
-            <MessageBubble
-              key={index}
-              message={msg}
-              onEdit={() => {
-                const updatedChat = [...currentChat];
-                updatedChat[index].text = prompt('Edit your message:', msg.text) || msg.text;
-                setCurrentChat(updatedChat);
-              }}
-              onCopy={() => navigator.clipboard.writeText(msg.text)}
-            />
-          ))}
-          {loading && (
-            <div className="flex justify-start">
-              <div className="bg-gray-200 p-3 rounded-xl max-w-[80%]">
-                <p>Thinking...</p>
+        <div className="chat-container">
+          <div className="message-group max-w-4xl mx-auto w-full">
+            {currentChat.map((msg, index) => (
+              <MessageBubble
+                key={index}
+                message={msg}
+                onEdit={() => {
+                  const updatedChat = [...currentChat];
+                  updatedChat[index].text = prompt('Edit your message:', msg.text) || msg.text;
+                  setCurrentChat(updatedChat);
+                }}
+                onCopy={() => navigator.clipboard.writeText(msg.text)}
+              />
+            ))}
+            {loading && (
+              <div className="flex justify-start px-4">
+                <div className="neu-card bg-violet-200 p-4">
+                  <p className="font-bold">Thinking...</p>
+                </div>
               </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
 
         {/* Chat Input */}
-        <ChatInput
-          message={message}
-          setMessage={setMessage}
-          sendMessage={sendMessage}
-          loading={loading}
-          onSave={saveConversation}
-        />
+        <div className="mt-auto">
+          <ChatInput
+            message={message}
+            setMessage={setMessage}
+            sendMessage={sendMessage}
+            loading={loading}
+            onSave={saveConversation}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "proz"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "proz-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

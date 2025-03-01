@@ -4,28 +4,36 @@ import { Send, Save } from 'lucide-react';
 
 export default function ChatInput({ message, setMessage, sendMessage, loading, onSave }) {
   return (
-    <div className="p-4 bg-white shadow-sm">
-      <div className="flex gap-2 w-full max-w-3xl mx-auto">
-        <input
-          className="flex-1 bg-gray-100 text-gray-900 placeholder-gray-500 p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Type your message..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-        />
-        <button 
-          className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg transition-all disabled:bg-gray-400"
-          onClick={sendMessage} 
-          disabled={loading}
-        >
-          <Send size={20} />
-        </button>
-        <button 
-          className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg transition-all"
-          onClick={onSave}
-        >
-          <Save size={20} />
-        </button>
+    <div className="p-6 bg-white border-t-4 border-black">
+      <div className="neu-container">
+        <div className="flex gap-3 sm:gap-4">
+          <div className="flex-1 relative">
+            <input
+              className="neu-input pr-24 sm:pr-32"
+              placeholder="Type your message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+            />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-2">
+              <button 
+                className="neu-button p-2 bg-violet-400 hover:bg-violet-300 disabled:bg-gray-200"
+                onClick={sendMessage} 
+                disabled={loading}
+                title="Send message"
+              >
+                <Send size={20} className="text-black" />
+              </button>
+              <button 
+                className="neu-button p-2 bg-pink-400 hover:bg-pink-300"
+                onClick={onSave}
+                title="Save conversation"
+              >
+                <Save size={20} className="text-black" />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
