@@ -8,7 +8,7 @@ import {
   sendPasswordResetEmail,
 } from '../../firebase/firebase';
 import GoogleSignIn from './GoogleSignIn';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, UserPlus, LogIn, ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -80,75 +80,116 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-50 to-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-sm w-full max-w-md border border-gray-100">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
-          {isLogin ? 'Welcome Back!' : 'Create an Account'}
-        </h2>
-
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        {successMessage && <p className="text-green-500 text-sm mb-4">✅ {successMessage}</p>}
-
-        <form className="space-y-6" onSubmit={handleEmailAuth}>
-          <div className="relative">
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent placeholder-gray-400"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Mail className="absolute left-3 top-2.5 text-gray-400" size={20} />
+    <div className="min-h-screen flex items-center justify-center bg-violet-50 p-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <div className="w-16 h-16 rounded-lg border-4 border-black bg-violet-400 flex-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover-rotate">
+            {isLogin ? (
+              <LogIn size={32} className="text-black" />
+            ) : (
+              <UserPlus size={32} className="text-black" />
+            )}
           </div>
-
-          <div className="relative">
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete={isLogin ? "current-password" : "new-password"}
-              required
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent placeholder-gray-400"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Lock className="absolute left-3 top-2.5 text-gray-400" size={20} />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:ring-offset-2 transition-all"
-          >
-            {isLogin ? 'Sign In' : 'Sign Up'}
-          </button>
-        </form>
-
-        <div className="mt-4 text-center">
-          <button onClick={() => setIsLogin(!isLogin)} className="text-sm text-blue-600 hover:text-blue-500">
-            {isLogin ? 'Create a new account' : 'Already have an account? Sign in'}
-          </button>
         </div>
 
-        <div className="mt-6 relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or continue with</span>
-        </div>
+        <div className="neu-card bg-white">
+          <h2 className="h2 text-center mb-8 bg-gradient-to-r from-violet-500 via-pink-500 to-yellow-500 text-transparent bg-clip-text">
+            {isLogin ? 'Welcome Back!' : 'Create Account'}
+          </h2>
 
-        <div className="mt-6 space-y-4">
-          <GoogleSignIn />
-        </div>
+          {error && (
+            <div className="mb-6 p-4 border-4 border-red-400 bg-red-50 rounded-lg">
+              <p className="font-bold text-red-600">{error}</p>
+            </div>
+          )}
+          
+          {successMessage && (
+            <div className="mb-6 p-4 border-4 border-green-400 bg-green-50 rounded-lg">
+              <p className="font-bold text-green-600">✓ {successMessage}</p>
+            </div>
+          )}
 
-        {isLogin && (
-          <div className="mt-4 text-center">
-            <button onClick={handleForgotPassword} className="text-sm text-blue-600 hover:text-blue-500">
-              Forgot your password?
+          <form className="space-y-6" onSubmit={handleEmailAuth}>
+            <div className="relative">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="neu-input pl-12"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" size={20} />
+            </div>
+
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete={isLogin ? "current-password" : "new-password"}
+                required
+                className="neu-input pl-12"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" size={20} />
+            </div>
+
+            <button
+              type="submit"
+              className="neu-button w-full bg-violet-400 hover:bg-violet-300 flex-center gap-2"
+            >
+              <span>{isLogin ? 'Sign In' : 'Sign Up'}</span>
+              <ArrowRight size={20} />
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <button 
+              onClick={() => setIsLogin(!isLogin)} 
+              className="text-violet-600 font-bold hover:text-violet-500 underline-offset-4 hover:underline"
+            >
+              {isLogin ? 'Create a new account' : 'Already have an account? Sign in'}
             </button>
           </div>
-        )}
+
+          <div className="mt-8 relative flex items-center">
+            <div className="flex-grow border-t-4 border-black"></div>
+            <span className="mx-4 font-bold text-gray-600">Or continue with</span>
+            <div className="flex-grow border-t-4 border-black"></div>
+          </div>
+
+          <div className="mt-6">
+            <button
+              onClick={() => {}} // Replace with your Google sign-in handler
+              className="neu-button w-full bg-pink-400 hover:bg-pink-300 flex-center gap-3"
+            >
+              <img
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google Logo"
+                className="w-6 h-6"
+              />
+              <span>Continue with Google</span>
+            </button>
+          </div>
+
+          {isLogin && (
+            <div className="mt-6 text-center">
+              <button 
+                onClick={handleForgotPassword} 
+                className="text-violet-600 font-bold hover:text-violet-500 underline-offset-4 hover:underline"
+              >
+                Forgot your password?
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
