@@ -7,6 +7,7 @@
 ## 🖥️ Tech Stack  
 <ul>
   <li><b>Next.js</b> – A fast React framework for server-side and client-side rendering.</li>
+  <li><b>Firebase Auth</b> – Authentication using email and Google sign-in.</li>
   <li><b>Google Gemini API</b> – AI-powered conversational intelligence from Google.</li>
   <li><b>Neubrutalism UI</b> – Bold, high-contrast design with sharp edges and vibrant colors.</li>
 </ul>  
