@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">🚀 Google Gemini Chatbot – Built with Next.js</h1>  
 
-## Getting Started
+<p align="center">A fast and responsive chatbot using the Google Gemini API, built with Next.js and featuring a sleek Neubrutalism-inspired UI.</p>  
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🖥️ Tech Stack  
+<ul>
+  <li><b>Next.js</b> – A fast React framework for server-side and client-side rendering.</li>
+  <li><b>Google Gemini API</b> – AI-powered conversational intelligence from Google.</li>
+  <li><b>Neubrutalism UI</b> – Bold, high-contrast design with sharp edges and vibrant colors.</li>
+</ul>  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## ⚠️ Important Note  
+<p>
+This app runs fully on the <b>client side</b>, which means the API key is exposed to the client. 
+<b>It’s not recommended</b> to expose your Google Gemini API key in a client-side application because:
+</p>  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<ul>
+  <li>API keys can be accessed through browser developer tools.</li>
+  <li>If your key is exposed, it can be abused by others.</li>
+  <li>Google may disable your key if it detects suspicious activity.</li>
+</ul>  
 
-## Learn More
+👉 <b>For production use, consider setting up a secure backend to handle API requests.</b>  
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 UI Design  
+<p>The chatbot follows a sleek <b>Neubrutalism-inspired UI</b>, featuring:</p>  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+✅ Bold, contrasting colors  
+✅ Clean, geometric design  
+✅ Minimalist yet functional layout  
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🌐 Setup & Installation  
+<ol>
+  <li>
+    <b>Clone the Repository:</b>
+    <pre><code>git clone https://github.com/your-username/gemini-chatbot.git  
+cd gemini-chatbot</code></pre>
+  </li>  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+  <li>
+    <b>Install Dependencies:</b>
+    <pre><code>npm install</code></pre>
+  </li>  
+
+  <li>
+    <b>Add Your API Key:</b>
+    <p>Create a <code>.env.local</code> file and add your Google Gemini API key:</p>
+    <pre><code>NEXT_PUBLIC_GEMINI_API_KEY=your-gemini-api-key</code></pre>
+  </li>  
+
+  <li>
+    <b>Start the Development Server:</b>
+    <pre><code>npm run dev</code></pre>
+  </li>  
+
+  <li>
+    <b>Open in Browser:</b>
+    <p>Visit: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></p>
+  </li>  
+</ol>  
+
+---
+
+## 🚧 Limitations  
+<ul>
+  <li>The app is running fully on the client side, which may lead to API key exposure.</li>
+  <li>For secure deployment, use a backend proxy to handle API calls.</li>
+</ul>  
+
+
+<p align="center">🔐 <b>Security Tip:</b> Never expose API keys directly in a client-side app!</p>  
