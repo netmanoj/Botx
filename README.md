@@ -1,6 +1,6 @@
 <h1 align="center">🚀 Google Gemini Chatbot</h1>  
 
-<p align="center">A fast and responsive chatbot using the Google Gemini API, built with Next.js and featuring a sleek Neubrutalism-inspired UI.</p>  
+<p align="center">A fast and responsive chatbot using the Google Gemini API, built with Next.js + firebase and featuring a sleek Neubrutalism-inspired UI.</p>  
 
 ---
 
