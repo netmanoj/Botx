@@ -14,7 +14,7 @@
 
 ---
 
-## ⚠️ Important Note  
+## ⚠️ CAUTION ⚠️ 
 <p>
 This app runs fully on the <b>client side</b>, which means the API key is exposed to the client. 
 <b>It’s not recommended</b> to expose your Google Gemini API key in a client-side application because:
